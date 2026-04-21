@@ -75,7 +75,7 @@ def get_traces_data(inkml_file_abs_path):
     else:
         #             'Consider Validation data that has no labels'
         [traces_data.append({"trace_group": [trace["coords"]]}) for trace in traces_all]
-
+    print(traces_data)
     return traces_data
 
 
