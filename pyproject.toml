@@ -1,0 +1,28 @@
+[project]
+name = "math2latex"
+version = "0.1.0"
+description = "A photomath-style scan-and-render LaTeX OCR model"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "torch==2.4.1",
+    "torchvision",
+    "torchaudio",
+    "torch-directml",
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "seaborn",
+    "scikit-learn",
+    "scikit-image",
+    "opencv-python",
+    "transformers",
+    "peft",
+    "tqdm",
+    "scipy",
+    "pillow",
+]
+
+[tool.uv]
+managed = true
+package = false

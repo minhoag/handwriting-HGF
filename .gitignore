@@ -5,6 +5,7 @@ __pycache__/
 
 # Model folder
 formula_images/
+dataset/*
 img_data/
 inkML_data/
 rendered_LaTeX/
@@ -33,7 +34,10 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-
+*.zip
+*.gz
+*.tar.gz
+*.lst
 # PyInstaller
 #  Usually these files are written by a python script from a template
 #  before PyInstaller builds the exe, so as to inject date/other infos into it.
