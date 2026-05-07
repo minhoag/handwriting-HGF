@@ -335,15 +335,18 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "matplotlib" },
+    { name = "networkx" },
     { name = "numpy" },
     { name = "opencv-python" },
     { name = "pandas" },
     { name = "peft" },
     { name = "pillow" },
+    { name = "rectpack" },
     { name = "scikit-image" },
     { name = "scikit-learn" },
     { name = "scipy" },
     { name = "seaborn" },
+    { name = "sympy" },
     { name = "torch" },
     { name = "torch-directml" },
     { name = "torchaudio" },
@@ -355,15 +358,18 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "matplotlib" },
+    { name = "networkx" },
     { name = "numpy" },
     { name = "opencv-python" },
     { name = "pandas" },
     { name = "peft" },
     { name = "pillow" },
+    { name = "rectpack" },
     { name = "scikit-image" },
     { name = "scikit-learn" },
     { name = "scipy" },
     { name = "seaborn" },
+    { name = "sympy" },
     { name = "torch", specifier = "==2.4.1" },
     { name = "torch-directml" },
     { name = "torchaudio" },
@@ -702,6 +708,12 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/86/bf/899e81e4cce32febab4fb42bb97dcdf66bc135272882d1987881a4b519e9/pyyaml-6.0.3-cp312-cp312-win_amd64.whl", hash = "sha256:5fcd34e47f6e0b794d17de1b4ff496c00986e1c83f7ab2fb8fcfe9616ff7477b", size = 154003, upload-time = "2025-09-25T21:32:21.167Z" },
     { url = "https://files.pythonhosted.org/packages/1a/08/67bd04656199bbb51dbed1439b7f27601dfb576fb864099c7ef0c3e55531/pyyaml-6.0.3-cp312-cp312-win_arm64.whl", hash = "sha256:64386e5e707d03a7e172c0701abfb7e10f0fb753ee1d773128192742712a98fd", size = 140344, upload-time = "2025-09-25T21:32:22.617Z" },
 ]
+
+[[package]]
+name = "rectpack"
+version = "0.2.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d6/72/b965bbfcfe5bcd486bbfc10a73345d51551971457ac2b84f786bfc6d86db/rectpack-0.2.2.tar.gz", hash = "sha256:15e383505fdfbaeb55ec640a5825d9ca2ce89019a6cdd552d6e57ec36c68ba2a", size = 17888, upload-time = "2021-11-24T21:12:56.557Z" }
 
 [[package]]
 name = "regex"

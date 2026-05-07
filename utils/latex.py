@@ -4,6 +4,8 @@ import numpy as np
 import random
 from matplotlib import pyplot as plt
 from scipy.ndimage import rotate
+from rectpack import newPacker
+import rectpack
 
 
 # Default colors used to simulate line artifacts/noise in the background
@@ -74,3 +76,45 @@ def display_formula(latex: str):
     # Remove \mbox{...} which is a formatting artifact
     parsed_latex = re.sub(r"\\mbox\{[^\}]*\}", "", latex)
     print(f"Formula: {parsed_latex}")
+
+
+def generate_page(images, p_lines=.5, in_scale=100, paper_width=8.5, paper_height=11):
+    """
+    takes in a list of PIL images and returns an image with them pasted on
+    and pixel wise bounding boxes describing the top left and bottom right
+    coordinates of the equation on the paper of the form (x1,y1,x2,y2)
+    """
+    color_channel = 'RGBA'
+
+    bounding_boxes =  [None] * len(images)
+    img_sizes = [x.size + (i,) for i,x in enumerate(images)]
+
+
+    scaled_width = int(in_scale * paper_width)
+    scaled_height = int(in_scale * paper_height)
+    # generates non-overlapping bounding boxes
+    packer = newPacker(rotation=False, pack_algo=rectpack.GuillotineBafMaxas)
+    packer.add_bin(scaled_width, scaled_height)
+
+    for r in img_sizes:
+        packer.add_rect(*r)
+    packer.pack()
+    
+    paper = Image.new(color_channel, (scaled_width, scaled_height), color=(255,255,255,255)) # generate white rectangle
+    
+    if np.random.rand(1) < p_lines:
+        # red line
+        red_distance = int(1.25 * in_scale)
+        red_line = Image.new(color_channel, (2, scaled_height), color=(255,0,0,255))
+        paper.paste(red_line, (red_distance,0))
+
+        # blue lines
+        blue_height = (9 * in_scale) //32
+        
+    for rect in packer.rect_list():
+        b, x, y, w, h, rid = rect
+
+        bounding_boxes[rid] = (x, y, x+w, y+h)
+        paper.paste(images[rid], (x,y), images[rid])
+        
+    return paper, bounding_boxes

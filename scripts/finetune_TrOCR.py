@@ -5,11 +5,8 @@ import numpy as np
 from PIL import Image
 from torchvision import transforms
 from sklearn.model_selection import train_test_split
-import sklearn as skl
 from transformers import TrOCRProcessor, VisionEncoderDecoderModel
-import torchvision.transforms.functional as TF
-import random
-
+import torch as t
 import argparse
 
 parser = argparse.ArgumentParser(
@@ -17,8 +14,6 @@ parser = argparse.ArgumentParser(
 )
 parser.add_argument("--gpu", type=int, default=0, help="GPU index for CUDA")
 args = parser.parse_args()
-
-import torch as t
 
 print("Select GPU Backend:")
 print("1: AMD (DirectML)")
@@ -37,12 +32,6 @@ else:
     device = t.device("cpu")
     print("No valid choice. Defaulting to CPU.")
 
-# Load LST files
-import pandas as pd
-import numpy as np
-import re
-from tqdm import tqdm, trange
-
 import sys, os
 
 # Get the absolute path of the directory containing the script
@@ -52,6 +41,10 @@ ROOT_DIR = os.path.dirname(SCRIPT_DIR)
 
 sys.path.append(ROOT_DIR)
 
+# Load LST files
+import pandas as pd
+import numpy as np
+from tqdm import tqdm, trange
 from utils.latex import crop_to_formula, renderedLaTeXLabelstr2Formula, display_formula
 from data.datasets import renderedLaTeXDataset, set_seed
 

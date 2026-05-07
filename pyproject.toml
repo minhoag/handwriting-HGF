@@ -21,6 +21,9 @@ dependencies = [
     "tqdm",
     "scipy",
     "pillow",
+    "rectpack",
+    "networkx",
+    "sympy",
 ]
 
 [tool.uv]

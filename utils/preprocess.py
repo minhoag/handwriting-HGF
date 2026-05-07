@@ -4,18 +4,28 @@ import numpy as np
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-from skimage.transform import resize
 import xml.etree.ElementTree as ET
 import os
 import numpy as np
 from tqdm import tqdm
-import cv2
 import collections
 
 
-def get_traces_data(inkml_file_abs_path):
+DEFAULT_INPUT_FOLDERS = [
+    "TrainINKML_2013",
+    "trainData_2012_part1",
+    "trainData_2012_part2",
+    "CROHME_training_2011",
+]
+DEFAULT_OUTPUT_DIR = "img_data"
+DEFAULT_INKML_DATA_DIR = "inkML_data"
+RENDER_DPI = 100
+LINE_WIDTH = 2
+IMAGE_COLOR = "black"
 
+
+def get_traces_data(inkml_file_abs_path):
+    print(f"Parsing: {os.path.basename(inkml_file_abs_path)}")
     traces_data = []
 
     tree = ET.parse(inkml_file_abs_path)
@@ -48,6 +58,8 @@ def get_traces_data(inkml_file_abs_path):
 
         traces_all.append({"id": trace_id, "coords": parsed_coords})
 
+    print(f"Found {len(traces_all)} raw coordinate traces.")
+
     #   'Sort traces_all list by id to make searching for references faster'
     traces_all.sort(key=lambda trace_dict: int(trace_dict["id"]))
 
@@ -75,7 +87,8 @@ def get_traces_data(inkml_file_abs_path):
     else:
         #             'Consider Validation data that has no labels'
         [traces_data.append({"trace_group": [trace["coords"]]}) for trace in traces_all]
-    print(traces_data)
+
+    print(f"Mapped {len(traces_data)} semantic symbols to their vector traces.")
     return traces_data
 
 
@@ -94,30 +107,24 @@ def get_gt(inkml_file_abs_path):
 def inkml2img(input_path, output_path):
     traces = get_traces_data(input_path)
 
-    # Configure matplotlib to draw just the lines without any axes or borders
+    # draw just the lines without any axes or borders
     plt.axis("off")
     plt.gca().invert_yaxis()
     plt.gca().set_aspect("equal", adjustable="box")
     plt.gca().set_xticks([])
     plt.gca().set_yticks([])
 
-    # Draw each trace onto the plot
+    # redraw vectors for machine learning
+    print("Rendering PNG...")
     for elem in traces:
         trace_group = elem["trace_group"]
         for sub_trace in trace_group:
             data = np.array(sub_trace)
-
-            # We only need X and Y coordinates; ignore pressure/tilt if present
             if data.shape[1] > 2:
                 data = data[:, :2]
-
             x, y = zip(*data)
             plt.plot(x, y, linewidth=2, c="black")
-
-    # Ensure output directory exists (exist_ok prevents errors if it's already there)
     os.makedirs(output_path, exist_ok=True)
-
-    # Generate a safe, flat filename
     input_path_safe = (
         os.path.normpath(input_path)
         .replace(os.sep, "_")
@@ -136,19 +143,20 @@ def inkml2img(input_path, output_path):
     plt.savefig(
         save_path,
         bbox_inches="tight",
-        dpi=100,
+        dpi=RENDER_DPI,
     )
     plt.gcf().clear()
+    print(f"Saved: {os.path.basename(save_path)}")
 
 
 def ink2img_folder(input_paths, output_path):
+    print(f"Preprocessing to: {output_path}")
     labels = collections.defaultdict(list)
     if not os.path.exists(output_path):
         os.makedirs(output_path)
 
     for input_path in input_paths:
         files = os.listdir(input_path)
-        # ignore all files that don't have the .inkML extension
         files = [file for file in files if file.endswith(".inkml")]
         for file in tqdm(files):
             inkML_path = os.path.join(input_path, file)
