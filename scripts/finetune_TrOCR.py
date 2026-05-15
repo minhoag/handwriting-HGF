@@ -18,7 +18,8 @@ args = parser.parse_args()
 print("Select GPU Backend:")
 print("1: AMD (DirectML)")
 print("2: NVIDIA (CUDA)")
-choice = input("Enter choice (1 or 2): ")
+print("3: CPU")
+choice = input("Enter choice (1, 2, or 3): ")
 
 if choice == "1":
     import torch_directml
@@ -28,6 +29,9 @@ if choice == "1":
 elif choice == "2":
     device = t.device(f"cuda:{args.gpu}")
     print(f"Using NVIDIA GPU: cuda:{args.gpu}")
+elif choice == "3":
+    device = t.device("cpu")
+    print("Using CPU")
 else:
     device = t.device("cpu")
     print("No valid choice. Defaulting to CPU.")
@@ -44,11 +48,11 @@ sys.path.append(ROOT_DIR)
 # Load LST files
 import pandas as pd
 import numpy as np
-from tqdm import tqdm, trange
-from utils.latex import crop_to_formula, renderedLaTeXLabelstr2Formula, display_formula
-from data.datasets import renderedLaTeXDataset, set_seed
+from tqdm import tqdmfrom 
+from data.datasets import set_seed
 
-# Load BASE model for extremely fast Proof of Concept (PoC)
+
+# Load BASE model
 hf_model_id = "microsoft/trocr-base-handwritten"
 model = VisionEncoderDecoderModel.from_pretrained(hf_model_id, use_safetensors=True).to(
     device

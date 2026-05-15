@@ -184,4 +184,6 @@ def ink2img_folder(input_paths, output_path):
                     + str(input_path)
                     + ". Don't worry, this is expected (though there should only be max 2 or 3!)."
                 )
-    pd.DataFrame(labels).to_csv(os.path.join(output_path, "labels.csv"), index=False)
+    pd.DataFrame(labels, columns=["label", "name"]).to_csv(
+        os.path.join(output_path, "labels.csv"), index=False
+    )

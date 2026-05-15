@@ -13,10 +13,19 @@ if (Test-Path "formula_images.tar.gz") {
     tar -xvzf "formula_images.tar.gz"
 }
 
-# 4. Handle the inkML data (from your other file: archive.zip)
+# 4. Handle the handwritten inkML data
+$handwrittenArchive = "handwritten-mathematical-expressions.zip"
+
 if (Test-Path "archive.zip") {
-    Expand-Archive -Path "archive.zip" -DestinationPath "inkML_data" -Force
+    $handwrittenArchive = "archive.zip"
 }
+elseif (-not (Test-Path $handwrittenArchive)) {
+    Write-Host "Downloading handwritten inkML dataset from Kaggle..." -ForegroundColor Cyan
+    Write-Host "This requires Kaggle API access/authentication to succeed." -ForegroundColor Yellow
+    wget "https://www.kaggle.com/api/v1/datasets/download/rtatman/handwritten-mathematical-expressions" -OutFile $handwrittenArchive -UseBasicParsing
+}
+
+Expand-Archive -Path $handwrittenArchive -DestinationPath "inkML_data" -Force
 
 # 5. Fix the folder structure (Flattening)
 Write-Host "Organizing folders..." -ForegroundColor Cyan
